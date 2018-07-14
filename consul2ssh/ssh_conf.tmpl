@@ -1,0 +1,5 @@
+
+Host {{ .Host }}
+{{- range $key, $value := .Main }}
+  {{ $key }} {{ $value }}
+{{- end }}
