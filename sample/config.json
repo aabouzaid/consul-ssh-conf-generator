@@ -1,0 +1,25 @@
+{
+  "main": {
+    "prefix": "dv",
+    "baseurl": "http://localhost:8501",
+    "jumphost": "bastion01.fqdn",
+    "domain": "consul"
+  },
+  "global": {
+    "User": "aabouzaid",
+    "Port": 2222
+  },
+  "pernode": {
+    "bastion01": {
+      "ForwardAgent": "yes"
+    }
+  },
+  "custom": {
+    "cassandra-local-proxy": {
+      "TCPKeepAlive": "yes",
+      "LocalForward": [
+        "9042 node02:9042"
+      ]
+    }
+  }
+}
