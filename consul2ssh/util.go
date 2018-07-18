@@ -10,3 +10,16 @@ func GetEnvKey(key, defaultVal string) string {
 	}
 	return defaultVal
 }
+
+func getFilePath(filePath string) string {
+
+	// Get working dir.
+	workingDir, err := os.Getwd()
+	if err != nil {
+		log.Print(err)
+		return ""
+	}
+	fullFilePath := fmt.Sprintf("%s/%s", workingDir, filePath)
+
+	return fullFilePath
+}
