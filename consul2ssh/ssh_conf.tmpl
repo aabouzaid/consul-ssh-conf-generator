@@ -1,5 +1,5 @@
 
 Host {{ .Host }}
-{{- range $key, $value := .Main }}
-  {{ $key }} {{ $value }}
+{{- range $item := fmtSSHElems .Main }}
+  {{ $item }}
 {{- end }}
