@@ -23,3 +23,9 @@ func getFilePath(filePath string) string {
 
 	return fullFilePath
 }
+
+func mergeMaps(src, dest MapInterface) {
+	for key, value := range src {
+		dest[key] = value
+	}
+}
