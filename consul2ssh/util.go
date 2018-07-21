@@ -29,3 +29,10 @@ func mergeMaps(src, dest MapInterface) {
 		dest[key] = value
 	}
 }
+
+func setStrVal(value, defaultVal string) string {
+	if value == "" {
+		return defaultVal
+	}
+	return value
+}
