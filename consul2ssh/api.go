@@ -70,3 +70,88 @@ func (c *ConsulNodes) GetJSON(apiURL string) error {
 
 	return nil
 }
+
+// GetNodes - Get Consul nodes.
+func GetNodes(w http.ResponseWriter, r *http.Request) {
+
+	// Read body.
+	var conf Conf
+	if err := conf.Get(r.Body); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Misconfigured or no body provided!\n"))
+		log.Printf("%s %s %s 400 error=%s\n", r.RemoteAddr, r.Method, r.URL, err)
+		return
+	}
+
+	var (
+		// Main config groups.
+		mc = conf.Main
+		gc = conf.Global
+		nc = conf.PerNode
+		cc = conf.Custom
+
+		// Common config.
+		jumphostName     = strings.Split(mc.JumpHost, ".")[0]
+		nodesEndpointURL = mc.BaseURL + nodesEndpoint
+		sshConfTemplate  = fmt.Sprintf("%s/ssh_conf.tmpl", templatesDir)
+	)
+
+	// Get nodes from Consul API, and format the output.
+	var nodesList ConsulNodes
+	nodesList.GetJSON(nodesEndpointURL)
+	// Put datacenter name as part of main config.
+	mc.Datacenter = setStrVal(mc.Datacenter, nodesList[0].Datacenter)
+	// Use datacenter name as prefix if there is no prefix.
+	mc.Prefix = setStrVal(mc.Prefix, mc.Datacenter)
+
+	// Nodes from
+	for _, node := range nodesList {
+
+		// Load global conf.
+		nodeConf := MapInterface{}
+		mergeMaps(gc, nodeConf)
+
+		// Any special handling.
+		if node.Name == jumphostName {
+			nodeConf["Hostname"] = mc.JumpHost
+		} else {
+			nodeConf["Hostname"] = fmt.Sprintf("%s.node.%s.%s", node.Name, node.Datacenter, mc.Domain)
+			nodeConf["ProxyCommand"] = fmt.Sprintf("ssh %s.%s -W %%h:%%p", mc.Prefix, jumphostName)
+		}
+
+		// Overwrite global if any.
+		if nodeSpecialConf, hasSpecialConf := nc[node.Name]; hasSpecialConf {
+			for key, value := range nodeSpecialConf {
+				nodeConf[key] = value
+			}
+		}
+
+		// Generate the template.
+		sshConf := SSHNodeConf{
+			Host: fmt.Sprintf("%s.%s", mc.Prefix, node.Name),
+			Main: nodeConf,
+		}
+		sshConf.buildTemplate(w, sshConfTemplate)
+
+	}
+
+	// Not real nodes but to access internal services using jumphost.
+	for nodeHost, nodeCustomConf := range cc {
+		// Load global conf.
+		nodeConf := MapInterface{}
+		mergeMaps(gc, nodeConf)
+		mergeMaps(nodeCustomConf, nodeConf)
+		nodeConf["Hostname"] = mc.JumpHost
+
+		// Generate the template.
+		sshConf := SSHNodeConf{
+			Host: fmt.Sprintf("%s.%s", mc.Prefix, nodeHost),
+			Main: nodeConf,
+		}
+		sshConf.buildTemplate(w, sshConfTemplate)
+	}
+
+	// Log request.
+	numberOfNodes := int(len(nodesList) + len(cc))
+	log.Printf("%s %s %s 200 nodesNum=%d\n", r.RemoteAddr, r.Method, r.URL, numberOfNodes)
+}
