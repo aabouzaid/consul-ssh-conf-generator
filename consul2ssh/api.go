@@ -2,7 +2,12 @@ package consul2ssh
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"strings"
 )
 
 type MapInterface map[string]interface{}
@@ -28,5 +33,40 @@ func (c *Conf) Get(reqBody io.Reader) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+type ConsulNodes []ConsulNode
+
+type ConsulNode struct {
+	Name       string `json:"node"`
+	Datacenter string `json:"datacenter"`
+}
+
+func (c *ConsulNodes) GetJSON(apiURL string) error {
+
+	// TODO: Better HTTP/s client.
+	_, err := url.Parse(apiURL)
+	if err != nil {
+		log.Printf("E %s", err)
+		return err
+	}
+
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		log.Printf("E %s", err)
+		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("E! %s %s", apiURL, resp.Status)
+		return err
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&c); err != nil {
+		log.Printf("E! %s", err)
+		return err
+	}
+
 	return nil
 }
