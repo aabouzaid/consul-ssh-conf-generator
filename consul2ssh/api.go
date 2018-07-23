@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+const (
+	templatesDir  = "consul2ssh"
+	nodesEndpoint = "/v1/catalog/nodes"
+)
+
 type MapInterface map[string]interface{}
 
 type Conf struct {
