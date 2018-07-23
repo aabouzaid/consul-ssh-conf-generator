@@ -2,6 +2,8 @@ package consul2ssh
 
 import (
 	"os"
+	"fmt"
+	"log"
 )
 
 func GetEnvKey(key, defaultVal string) string {
