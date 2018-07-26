@@ -1,7 +1,10 @@
 {
+  "api": {
+    "consul": "http://localhost:8501",
+    "consul2ssh": "http://localhost:8001"
+  },
   "main": {
     "prefix": "dv",
-    "baseurl": "http://localhost:8501",
     "jumphost": "bastion01.fqdn",
     "domain": "consul"
   },

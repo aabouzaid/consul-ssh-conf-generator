@@ -11,21 +11,26 @@ import (
 )
 
 const (
-	templatesDir  = "consul2ssh"
-	nodesEndpoint = "/v1/catalog/nodes"
+	templatesDir        = "consul2ssh"
+	consulNodesEndpoint = "/v1/catalog/nodes"
 )
 
 type MapInterface map[string]interface{}
 
 type Conf struct {
+	API     APIConf                 `json:"api"`
 	Main    MainConf                `json:"main"`
 	Global  MapInterface            `json:"global"`
 	PerNode map[string]MapInterface `json:"pernode"`
 	Custom  map[string]MapInterface `json:"custom"`
 }
 
+type APIConf struct {
+	ConsulURL string `json:"consul"`
+	C2SURL    string `json:"consul2ssh"`
+}
+
 type MainConf struct {
-	BaseURL    string `json:"baseurl"`
 	Format     string `json:"format"`
 	Prefix     string `json:"prefix"`
 	JumpHost   string `json:"jumphost"`
@@ -90,20 +95,21 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		// Main config groups.
+		ac = conf.API
 		mc = conf.Main
 		gc = conf.Global
 		nc = conf.PerNode
 		cc = conf.Custom
 
 		// Common config.
-		jumphostName     = strings.Split(mc.JumpHost, ".")[0]
-		nodesEndpointURL = mc.BaseURL + nodesEndpoint
-		sshConfTemplate  = fmt.Sprintf("%s/ssh_conf.tmpl", templatesDir)
+		jumphostName        = strings.Split(mc.JumpHost, ".")[0]
+		consulNodesEndpoint = ac.ConsulURL + consulNodesEndpoint
+		sshConfTemplate     = fmt.Sprintf("%s/ssh_conf.tmpl", templatesDir)
 	)
 
 	// Get nodes from Consul API, and format the output.
 	var nodesList ConsulNodes
-	nodesList.GetJSON(nodesEndpointURL)
+	nodesList.GetJSON(consulNodesEndpoint)
 	// Put datacenter name as part of main config.
 	mc.Datacenter = setStrVal(mc.Datacenter, nodesList[0].Datacenter)
 	// Use datacenter name as prefix if there is no prefix.
