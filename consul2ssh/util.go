@@ -1,10 +1,17 @@
 package consul2ssh
 
 import (
-	"os"
 	"fmt"
 	"log"
+	"os"
 )
+
+func checkErrCMD(err error) {
+	if err != nil {
+		log.Print(err)
+		os.Exit(1)
+	}
+}
 
 func GetEnvKey(key, defaultVal string) string {
 	if value, isSet := os.LookupEnv(key); isSet {
