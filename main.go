@@ -30,7 +30,7 @@ func main() {
 		case "get":
 			cmd()
 		}
-	// Work as API.
+		// Work as API.
 	} else {
 		api()
 	}
