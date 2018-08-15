@@ -39,3 +39,25 @@ func readConfFile(file string) []byte {
 	checkErrCMD(err)
 	return fileContent
 }
+
+// GetNodesCMD - get nodes from API in SSH conf format.
+func GetNodesCMD(args []string) {
+
+	//
+	cmdConf := readCMDArgs(args)
+	var confData Conf
+	jsonPayload := readConfFile(cmdConf.confFile)
+	confData.Get(bytes.NewReader(jsonPayload))
+	c2sNodesURL := setStrVal(cmdConf.url, confData.API.C2SURL) + c2sNodesEndpoint
+
+	//
+	req, err := http.NewRequest("GET", c2sNodesURL, bytes.NewBuffer(jsonPayload))
+	checkErrCMD(err)
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	checkErrCMD(err)
+	defer resp.Body.Close()
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	fmt.Print(string(respBody))
+}
