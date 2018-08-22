@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"path"
 	"reflect"
 	"sort"
 	"text/template"
@@ -41,13 +40,11 @@ var templFuncs = template.FuncMap{
 // buildSSHTemplate - Make SSH config template.
 func (c *SSHNodeConf) buildTemplate(
 	w http.ResponseWriter,
-	templateFile string,
+	sshConfTemplate string,
 ) error {
 
 	// Generate the template.
-	tmplFileBase := path.Base(templateFile)
-	tmplFile := getFilePath(templateFile)
-	tmpl, err := template.New(tmplFileBase).Funcs(templFuncs).ParseFiles(tmplFile)
+	tmpl, err := template.New("").Funcs(templFuncs).Parse(sshConfTemplate)
 	if err != nil {
 		log.Print(err)
 		return err

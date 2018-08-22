@@ -11,9 +11,15 @@ import (
 )
 
 const (
-	templatesDir        = "consul2ssh"
 	consulNodesEndpoint = "/v1/catalog/nodes"
 )
+
+var sshConfTemplate = `
+Host {{ .Host }}
+{{- range $item := fmtSSHElems .Main }}
+  {{ $item }}
+{{- end }}
+`
 
 type MapInterface map[string]interface{}
 
@@ -104,7 +110,6 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 		// Common config.
 		jumphostName        = strings.Split(mc.JumpHost, ".")[0]
 		consulNodesEndpoint = ac.ConsulURL + consulNodesEndpoint
-		sshConfTemplate     = fmt.Sprintf("%s/ssh_conf.tmpl", templatesDir)
 	)
 
 	// Get nodes from Consul API, and format the output.
