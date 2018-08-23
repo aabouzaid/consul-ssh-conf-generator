@@ -52,9 +52,7 @@ func (c *Conf) Get(reqBody io.Reader) error {
 	return nil
 }
 
-type ConsulNodes []ConsulNode
-
-type ConsulNode struct {
+type ConsulNodes []struct {
 	Name       string `json:"node"`
 	Datacenter string `json:"datacenter"`
 }
