@@ -3,7 +3,8 @@ dist: trusty
 
 jobs:
   include:
-    - stage: Build docker image.
+    - stage: Build and push docker image.
+      if: branch = master
       script:
       - export IMG="consul2ssh"
       - export REPO="$DOCKER_USERNAME/$IMG"
