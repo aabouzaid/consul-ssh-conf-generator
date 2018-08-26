@@ -1,0 +1,15 @@
+sudo: true
+dist: trusty
+
+jobs:
+  include:
+    - stage: Build and push docker image.
+      if: branch = master
+      script:
+      - export IMG="consul2ssh"
+      - export REPO="$DOCKER_USERNAME/$IMG"
+      - export TAG="${TRAVIS_TAG:-latest}"
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t $REPO:$TAG .
+      - docker images
+      - docker push $DOCKER_USERNAME/$IMG
