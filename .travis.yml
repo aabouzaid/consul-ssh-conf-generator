@@ -1,15 +1,34 @@
 sudo: true
-dist: trusty
+language: go
+go:
+  - "1.10.x"
+
+env:
+  global:
+    - IMG="consul2ssh"
+    - REPO="$DOCKER_USERNAME/$IMG"
 
 jobs:
   include:
+
     - stage: Build and push docker image.
       if: branch = master
       script:
-      - export IMG="consul2ssh"
-      - export REPO="$DOCKER_USERNAME/$IMG"
-      - export TAG="${TRAVIS_TAG:-latest}"
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t $REPO:$TAG .
-      - docker images
-      - docker push $DOCKER_USERNAME/$IMG
+        - export TAG="${TRAVIS_TAG:-`git describe --abbrev=0 --tags | tr -d '[:alpha:]'`}"
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        # Build tagged and latest images.
+        - docker build -t $REPO:$TAG -t $REPO .
+        - docker images
+        # Push images.
+        - docker push $REPO
+
+    - stage: Build and push binaries to GitHub.
+      if: branch = master
+      script:
+        - make release
+      deploy:
+        provider: releases
+        api_key: "$GHA_TOKEN"
+        file_glob: true
+        file: dist/*
+        skip_cleanup: true
