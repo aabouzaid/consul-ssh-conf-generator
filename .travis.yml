@@ -3,29 +3,20 @@ language: go
 go:
   - "1.10.x"
 
-env:
-  global:
-    - IMG="consul2ssh"
-    - REPO="$DOCKER_USERNAME/$IMG"
-
 jobs:
   include:
 
     - stage: Build and push docker image.
       if: branch = master
       script:
-        - export TAG="${TRAVIS_TAG:-`git describe --abbrev=0 --tags | tr -d '[:alpha:]'`}"
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        # Build tagged and latest images.
-        - docker build -t $REPO:$TAG -t $REPO .
-        - docker images
-        # Push images.
-        - docker push $REPO
+        # Build tagged and latest images and push them to Docker Hub.
+        - make docker_release
 
     - stage: Build and push binaries to GitHub.
       if: branch = master
       script:
-        - make release
+        - make cli_release
       deploy:
         provider: releases
         api_key: "$GHA_TOKEN"
