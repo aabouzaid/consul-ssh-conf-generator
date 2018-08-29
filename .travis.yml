@@ -21,5 +21,5 @@ jobs:
         provider: releases
         api_key: "$GHA_TOKEN"
         file_glob: true
-        file: dist/*
+        file: dist/*.gz
         skip_cleanup: true

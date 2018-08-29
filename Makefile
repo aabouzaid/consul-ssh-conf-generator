@@ -38,7 +38,9 @@ cli_build: cli_clean $(PLATFORMS)
 $(PLATFORMS):
 	$(eval GOOS := $(firstword $(subst -, ,$@)))
 	$(eval GOARCH := $(lastword $(subst -, ,$@)))
-	env GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o $(DIST_DIR)/$(APPNAME)_$(RELEASE)_$(GOOS)_$(GOARCH)
+	$(eval BIN_FILE := $(APPNAME)_$(RELEASE)_$(GOOS)_$(GOARCH))
+	env GOOS=$(GOOS) GOARCH=$(GOARCH) go build -o $(DIST_DIR)/$(BIN_FILE)
+	gzip $(DIST_DIR)/$(BIN_FILE)
 
 cli_md5:
 	cd $(DIST_DIR) && md5sum $(APPNAME)_$(RELEASE)_* | tee MD5SUM
