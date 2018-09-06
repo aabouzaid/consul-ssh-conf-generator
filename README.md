@@ -16,6 +16,11 @@ So if you already use Consul as a service discovery, you can use `consul2ssh` as
 
 ### How it works?
 Consul2SSH has 2 parts. It works as a middleware API where it call Consul to get registered members and return them in SSH config format.
+
+<p align="center">
+<img src="https://gist.githubusercontent.com/AAbouZaid/aee2010d4b0d0ff89adc517664b8f130/raw/f3d6f94ef331f28f6d64856cc040fc80e3ae83e3/consul2ssh_dia.png" width="320">
+</p>
+
 Since Consul2SSH is just a REST API, any client could be used to interact with it like `curl` or `postman`. Also Consul2SSH works as a client to call the API.
 
 
@@ -139,6 +144,3 @@ Also you can do the same with cURL:
 ```
 curl http://consul2ssh.host:8081/nodes -d '@sample/config.json'
 ```
-
-
-
