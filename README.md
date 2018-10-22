@@ -145,3 +145,10 @@ Also you can do the same with cURL:
 ```
 curl http://consul2ssh.host:8081/nodes -d '@sample/config.json'
 ```
+
+## To-do
+- Get info for specific host.
+- Better logging.
+- Better way to make help message.
+- Handle root route `/`.
+- Fix the diagram direction.
