@@ -14,4 +14,4 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/consul2ssh
 FROM scratch
 COPY --from=app_builder /app/consul2ssh .
 EXPOSE 8001
-CMD ["./consul2ssh"]
+ENTRYPOINT ["./consul2ssh", "listen"]

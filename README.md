@@ -31,14 +31,15 @@ You can try `consul2ssh` locally with no need to running Consul cluster as follo
 go run sample/mock.go
 
 # Run Consul2SSH API.
-go run main.go
+go run main.go listen
 
+#
 # Get nodes from Consul2SSH API.
 
 # Using C2S CLI.
 consul2ssh get
 
-# Using cURL.
+# Or using cURL.
 curl http://localhost:8001/nodes -d '@sample/config.json'
 
 ---
