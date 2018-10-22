@@ -24,7 +24,7 @@ func (c *cmd) init() {
 	c.flags.StringVar(&c.confFile, "config-file",
 		"~/.consul2ssh/config.json", "Config file that will be used.")
 	c.flags.StringVar(&c.url, "url",
-		"http://localhost:8001", "Config file that will be used.")
+		"http://localhost:8001", "API URL for consul2ssh.")
 }
 
 func readCMDArgs(args []string) *cmd {

@@ -137,7 +137,7 @@ consul2ssh get -h
   -config-file string
     	Config file that will be used. (default "~/.consul2ssh/config.json")
   -url string
-    	Config file that will be used. (default "http://localhost:8001")
+    	API URL for consul2ssh. (default "http://localhost:8001")
 
 ```
 
