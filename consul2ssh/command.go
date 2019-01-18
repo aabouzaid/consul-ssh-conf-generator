@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/user"
+	"path/filepath"
+	"strings"
 )
 
 const (
@@ -24,7 +27,7 @@ func (c *cmd) init() {
 	c.flags.StringVar(&c.confFile, "config-file",
 		"~/.consul2ssh/config.json", "Config file that will be used.")
 	c.flags.StringVar(&c.url, "url",
-		"http://localhost:8001", "Config file that will be used.")
+		"http://localhost:8001", "API URL for consul2ssh.")
 }
 
 func readCMDArgs(args []string) *cmd {
@@ -35,6 +38,16 @@ func readCMDArgs(args []string) *cmd {
 }
 
 func readConfFile(file string) []byte {
+	user, _ := user.Current()
+	user_home := user.HomeDir
+
+	// Expand tilde to home directory.
+	if file == "~" {
+		file = user_home
+	} else if strings.HasPrefix(file, "~/") {
+		file = filepath.Join(user_home, file[2:])
+	}
+
 	fileContent, err := ioutil.ReadFile(file)
 	checkErrCMD(err)
 	return fileContent
