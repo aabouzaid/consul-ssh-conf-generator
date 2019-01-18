@@ -147,8 +147,4 @@ curl http://consul2ssh.host:8081/nodes -d '@sample/config.json'
 ```
 
 ## To-do
-- Get info for specific host.
-- Better logging.
-- Better way to make help message.
-- Handle root route `/`.
-- Fix the diagram direction.
+More details at the project [Kanban board](https://github.com/AAbouZaid/consul-ssh-conf-generator/projects/1).
