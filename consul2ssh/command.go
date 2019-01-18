@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/user"
+	"path/filepath"
+	"strings"
 )
 
 const (
@@ -35,6 +38,16 @@ func readCMDArgs(args []string) *cmd {
 }
 
 func readConfFile(file string) []byte {
+	user, _ := user.Current()
+	user_home := user.HomeDir
+
+	// Expand tilde to home directory.
+	if file == "~" {
+		file = user_home
+	} else if strings.HasPrefix(file, "~/") {
+		file = filepath.Join(user_home, file[2:])
+	}
+
 	fileContent, err := ioutil.ReadFile(file)
 	checkErrCMD(err)
 	return fileContent
