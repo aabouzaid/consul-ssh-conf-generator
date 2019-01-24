@@ -141,7 +141,7 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Generate the template.
-		sshConf := SSHNodeConf{
+		sshConf := sshNodeConf{
 			Host: fmt.Sprintf("%s.%s", mc.Prefix, node.Name),
 			Main: nodeConf,
 		}
@@ -158,7 +158,7 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 		nodeConf["Hostname"] = mc.JumpHost
 
 		// Generate the template.
-		sshConf := SSHNodeConf{
+		sshConf := sshNodeConf{
 			Host: fmt.Sprintf("%s.%s", mc.Prefix, nodeHost),
 			Main: nodeConf,
 		}

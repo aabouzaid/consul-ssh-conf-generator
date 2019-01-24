@@ -9,7 +9,7 @@ import (
 	"text/template"
 )
 
-type SSHNodeConf struct {
+type sshNodeConf struct {
 	Host string `json:"node"`
 	Main MapInterface
 }
@@ -38,7 +38,7 @@ var templFuncs = template.FuncMap{
 }
 
 // buildSSHTemplate - Make SSH config template.
-func (c *SSHNodeConf) buildTemplate(
+func (c *sshNodeConf) buildTemplate(
 	w http.ResponseWriter,
 	sshConfTemplate string,
 ) error {
