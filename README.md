@@ -114,7 +114,6 @@ There are 5 main sections in the config file:
 
 Please note: Config file is meant to be used in client slide not API side. 
 
-
 ### API Service
 Simply pull `consul2ssh` and run it, and it will listen to `8001` port.
 Since configuration comes from the client, no configuration is need. You can set `LISTEN_HOST` and `LISTEN_PORT` as env vars.
