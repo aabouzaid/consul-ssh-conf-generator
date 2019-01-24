@@ -1,4 +1,5 @@
 # Consul2SSH.
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/607d6bcc4826417f82be8c1a6da42346)](https://app.codacy.com/app/AAbouZaid/consul-ssh-conf-generator?utm_source=github.com&utm_medium=referral&utm_content=AAbouZaid/consul-ssh-conf-generator&utm_campaign=Badge_Grade_Dashboard)
 [![Travis Build](https://img.shields.io/travis/AAbouZaid/consul-ssh-conf-generator/master.svg?logo=travis)](https://travis-ci.org/AAbouZaid/consul-ssh-conf-generator)
 [![Releases](https://img.shields.io/github/release/AAbouZaid/consul-ssh-conf-generator.svg?logo=github)](https://github.com/AAbouZaid/consul-ssh-conf-generator/releases/latest)
 [![Docker Image](https://img.shields.io/microbadger/image-size/aabouzaid/consul2ssh.svg?logo=docker&label=docker%20img)](https://hub.docker.com/r/aabouzaid/consul2ssh/)
