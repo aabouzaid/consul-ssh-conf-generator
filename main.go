@@ -11,10 +11,10 @@ import (
 
 func help() {
 	// TODO: A better way to do this later.
-	help_message := "Usage:" +
+	helpMessage := "Usage:" +
 		"\n  API: Use \"listen\" to run as a deamon." +
 		"\n  CLI: Use \"get\" to run as command line interface for the API.\n"
-	fmt.Printf(help_message)
+	fmt.Printf(helpMessage)
 }
 
 func api() {
