@@ -21,22 +21,22 @@ Host {{ .Host }}
 {{- end }}
 `
 
-type MapInterface map[string]interface{}
+type mapInterface map[string]interface{}
 
-type Conf struct {
-	API     APIConf                 `json:"api"`
-	Main    MainConf                `json:"main"`
-	Global  MapInterface            `json:"global"`
-	PerNode map[string]MapInterface `json:"pernode"`
-	Custom  map[string]MapInterface `json:"custom"`
+type s2cConf struct {
+	API     apiConf                 `json:"api"`
+	Main    mainConf                `json:"main"`
+	Global  mapInterface            `json:"global"`
+	PerNode map[string]mapInterface `json:"pernode"`
+	Custom  map[string]mapInterface `json:"custom"`
 }
 
-type APIConf struct {
+type apiConf struct {
 	ConsulURL string `json:"consul"`
 	C2SURL    string `json:"consul2ssh"`
 }
 
-type MainConf struct {
+type mainConf struct {
 	Format     string `json:"format"`
 	Prefix     string `json:"prefix"`
 	JumpHost   string `json:"jumphost"`
@@ -44,7 +44,7 @@ type MainConf struct {
 	Datacenter string `json:"datacenter"`
 }
 
-func (c *Conf) Get(reqBody io.Reader) error {
+func (c *s2cConf) get(reqBody io.Reader) error {
 	err := json.NewDecoder(reqBody).Decode(&c)
 	if err != nil {
 		return err
@@ -52,12 +52,12 @@ func (c *Conf) Get(reqBody io.Reader) error {
 	return nil
 }
 
-type ConsulNodes []struct {
+type consulNodes []struct {
 	Name       string `json:"node"`
 	Datacenter string `json:"datacenter"`
 }
 
-func (c *ConsulNodes) GetJSON(apiURL string) error {
+func (c *consulNodes) getJSON(apiURL string) error {
 
 	// TODO: Better HTTP/s client.
 	_, err := url.Parse(apiURL)
@@ -89,8 +89,8 @@ func (c *ConsulNodes) GetJSON(apiURL string) error {
 func GetNodes(w http.ResponseWriter, r *http.Request) {
 
 	// Read body.
-	var conf Conf
-	if err := conf.Get(r.Body); err != nil {
+	var conf s2cConf
+	if err := conf.get(r.Body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Misconfigured or no body provided!\n"))
 		log.Printf("%s %s %s 400 error=%s\n", r.RemoteAddr, r.Method, r.URL, err)
@@ -111,8 +111,8 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 	)
 
 	// Get nodes from Consul API, and format the output.
-	var nodesList ConsulNodes
-	nodesList.GetJSON(consulNodesEndpoint)
+	var nodesList consulNodes
+	nodesList.getJSON(consulNodesEndpoint)
 	// Put datacenter name as part of main config.
 	mc.Datacenter = setStrVal(mc.Datacenter, nodesList[0].Datacenter)
 	// Use datacenter name as prefix if there is no prefix.
@@ -122,7 +122,7 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 	for _, node := range nodesList {
 
 		// Load global conf.
-		nodeConf := MapInterface{}
+		nodeConf := mapInterface{}
 		mergeMaps(gc, nodeConf)
 
 		// Any special handling.
@@ -152,7 +152,7 @@ func GetNodes(w http.ResponseWriter, r *http.Request) {
 	// Not real nodes but to access internal services using jumphost.
 	for nodeHost, nodeCustomConf := range cc {
 		// Load global conf.
-		nodeConf := MapInterface{}
+		nodeConf := mapInterface{}
 		mergeMaps(gc, nodeConf)
 		mergeMaps(nodeCustomConf, nodeConf)
 		nodeConf["Hostname"] = mc.JumpHost

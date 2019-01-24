@@ -34,7 +34,7 @@ func getFilePath(filePath string) string {
 	return fullFilePath
 }
 
-func mergeMaps(src, dest MapInterface) {
+func mergeMaps(src, dest mapInterface) {
 	for key, value := range src {
 		dest[key] = value
 	}

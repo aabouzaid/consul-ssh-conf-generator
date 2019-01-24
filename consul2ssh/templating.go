@@ -11,11 +11,11 @@ import (
 
 type sshNodeConf struct {
 	Host string `json:"node"`
-	Main MapInterface
+	Main mapInterface
 }
 
 // fmtSSHElems - format SSH config elements.
-func fmtSSHElems(m MapInterface) []string {
+func fmtSSHElems(m mapInterface) []string {
 	output := []string{}
 	for key, value := range m {
 		rt := reflect.TypeOf(value)

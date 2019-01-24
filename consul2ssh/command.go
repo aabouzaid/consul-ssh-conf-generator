@@ -58,9 +58,9 @@ func GetNodesCMD(args []string) {
 
 	//
 	cmdConf := readCMDArgs(args)
-	var confData Conf
+	var confData s2cConf
 	jsonPayload := readConfFile(cmdConf.confFile)
-	confData.Get(bytes.NewReader(jsonPayload))
+	confData.get(bytes.NewReader(jsonPayload))
 	c2sNodesURL := setStrVal(cmdConf.url, confData.API.C2SURL) + c2sNodesEndpoint
 
 	//
