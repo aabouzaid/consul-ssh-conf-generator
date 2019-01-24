@@ -6,7 +6,6 @@
 
 API with CLI to get hosts from Consul and format them in SSH config style.
 
-
 ## Why?
 When you are working in a hybrid dynamic environment (e.g. on-premise and public cloud), it's hard to track nodes when you need to access them.
 
@@ -22,7 +21,6 @@ Consul2SSH has 2 parts. It works as a middleware API where it call Consul to get
 </p>
 
 Since Consul2SSH is just a REST API, any client could be used to interact with it like `curl` or `postman`. Also Consul2SSH works as a client to call the API.
-
 
 ### Try it locally
 You can try `consul2ssh` locally with no need to running Consul cluster as following:
