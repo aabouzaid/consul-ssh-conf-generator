@@ -9,13 +9,13 @@ import (
 	"text/template"
 )
 
-type SSHNodeConf struct {
+type sshNodeConf struct {
 	Host string `json:"node"`
-	Main MapInterface
+	Main mapInterface
 }
 
 // fmtSSHElems - format SSH config elements.
-func fmtSSHElems(m MapInterface) []string {
+func fmtSSHElems(m mapInterface) []string {
 	output := []string{}
 	for key, value := range m {
 		rt := reflect.TypeOf(value)
@@ -38,7 +38,7 @@ var templFuncs = template.FuncMap{
 }
 
 // buildSSHTemplate - Make SSH config template.
-func (c *SSHNodeConf) buildTemplate(
+func (c *sshNodeConf) buildTemplate(
 	w http.ResponseWriter,
 	sshConfTemplate string,
 ) error {

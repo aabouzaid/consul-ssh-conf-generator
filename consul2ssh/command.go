@@ -39,13 +39,13 @@ func readCMDArgs(args []string) *cmd {
 
 func readConfFile(file string) []byte {
 	user, _ := user.Current()
-	user_home := user.HomeDir
+	userHome := user.HomeDir
 
 	// Expand tilde to home directory.
 	if file == "~" {
-		file = user_home
+		file = userHome
 	} else if strings.HasPrefix(file, "~/") {
-		file = filepath.Join(user_home, file[2:])
+		file = filepath.Join(userHome, file[2:])
 	}
 
 	fileContent, err := ioutil.ReadFile(file)
@@ -58,9 +58,9 @@ func GetNodesCMD(args []string) {
 
 	//
 	cmdConf := readCMDArgs(args)
-	var confData Conf
+	var confData s2cConf
 	jsonPayload := readConfFile(cmdConf.confFile)
-	confData.Get(bytes.NewReader(jsonPayload))
+	confData.get(bytes.NewReader(jsonPayload))
 	c2sNodesURL := setStrVal(cmdConf.url, confData.API.C2SURL) + c2sNodesEndpoint
 
 	//

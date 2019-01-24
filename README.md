@@ -1,11 +1,11 @@
 # Consul2SSH.
 [![Travis Build](https://img.shields.io/travis/AAbouZaid/consul-ssh-conf-generator/master.svg?logo=travis)](https://travis-ci.org/AAbouZaid/consul-ssh-conf-generator)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d3425a36709146d3ad0bee805dea2df6)](https://www.codacy.com/app/AAbouZaid/consul-ssh-conf-generator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AAbouZaid/consul-ssh-conf-generator&amp;utm_campaign=Badge_Grade)
 [![Releases](https://img.shields.io/github/release/AAbouZaid/consul-ssh-conf-generator.svg?logo=github)](https://github.com/AAbouZaid/consul-ssh-conf-generator/releases/latest)
 [![Docker Image](https://img.shields.io/microbadger/image-size/aabouzaid/consul2ssh.svg?logo=docker&label=docker%20img)](https://hub.docker.com/r/aabouzaid/consul2ssh/)
 [![CLI](https://img.shields.io/badge/CLI-amd64%2Ci386%2Carm-blue.svg?longCache=true)](https://github.com/AAbouZaid/consul-ssh-conf-generator/releases/latest)
 
 API with CLI to get hosts from Consul and format them in SSH config style.
-
 
 ## Why?
 When you are working in a hybrid dynamic environment (e.g. on-premise and public cloud), it's hard to track nodes when you need to access them.
@@ -22,7 +22,6 @@ Consul2SSH has 2 parts. It works as a middleware API where it call Consul to get
 </p>
 
 Since Consul2SSH is just a REST API, any client could be used to interact with it like `curl` or `postman`. Also Consul2SSH works as a client to call the API.
-
 
 ### Try it locally
 You can try `consul2ssh` locally with no need to running Consul cluster as following:
@@ -116,7 +115,6 @@ There are 5 main sections in the config file:
 
 Please note: Config file is meant to be used in client slide not API side. 
 
-
 ### API Service
 Simply pull `consul2ssh` and run it, and it will listen to `8001` port.
 Since configuration comes from the client, no configuration is need. You can set `LISTEN_HOST` and `LISTEN_PORT` as env vars.
@@ -147,8 +145,4 @@ curl http://consul2ssh.host:8081/nodes -d '@sample/config.json'
 ```
 
 ## To-do
-- Get info for specific host.
-- Better logging.
-- Better way to make help message.
-- Handle root route `/`.
-- Fix the diagram direction.
+More details at the project [Kanban board](https://github.com/AAbouZaid/consul-ssh-conf-generator/projects/1).
