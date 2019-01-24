@@ -13,6 +13,7 @@ func checkErrCMD(err error) {
 	}
 }
 
+// GetEnvKey - Look up for environment variables and set default value if not exist.
 func GetEnvKey(key, defaultVal string) string {
 	if value, isSet := os.LookupEnv(key); isSet {
 		return value
