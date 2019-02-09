@@ -11,11 +11,15 @@ deps:
 	go generate
 	go get -v -t ./...
 
+test:
+	go test -v ./...
+
 build:
 	go build -v -o $(APPNAME)_$(RELEASE)
 
 clean:
 	rm -rfv $(APPNAME)_$(RELEASE)
+
 
 #
 # Docker image.

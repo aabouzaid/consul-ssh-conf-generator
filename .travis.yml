@@ -6,6 +6,10 @@ go:
 jobs:
   include:
 
+    - stage: Run unit test.
+      script:
+        - make test
+
     - stage: Build and push docker image.
       if: branch = master
       script:
