@@ -1,9 +1,10 @@
-APPNAME     := consul2ssh
-DIST_DIR    := ./dist
-PLATFORMS   := linux-386 linux-amd64 linux-arm
-RELEASE     := $(shell git describe --abbrev=0 --tags | tr -d '[:alpha:]')
-DOCKER_USER := $(or ${DOCKER_USERNAME}, root)
-DOCKER_REPO := $(DOCKER_USER)/$(APPNAME)
+APPNAME        := consul2ssh
+DIST_DIR       := ./dist
+PLATFORMS      := linux-386 linux-amd64 linux-arm
+RELEASE        := $(shell git describe --abbrev=0 --tags | tr -d '[:alpha:]')
+DOCKER_USER    := $(or ${DOCKER_USERNAME}, root)
+DOCKER_REPO    := $(DOCKER_USER)/$(APPNAME)
+COVERAGEF_FILE := coverage.out
 
 #
 # General.
@@ -11,8 +12,8 @@ deps:
 	go generate
 	go get -v -t ./...
 
-test:
-	go test -v ./...
+unittest:
+	go test -v -covermode=count -coverprofile=$(COVERAGEF_FILE) ./...
 
 build:
 	go build -v -o $(APPNAME)_$(RELEASE)
@@ -20,6 +21,14 @@ build:
 clean:
 	rm -rfv $(APPNAME)_$(RELEASE)
 
+#
+# Unit test.
+unittest_coverage: deps unittest
+	# Install required tools.
+	go get -v golang.org/x/tools/cmd/cover github.com/mattn/goveralls
+
+        # Get coverage report, and push it to coveralls.
+	${GOPATH}/bin/goveralls -coverprofile=$(COVERAGEF_FILE) -service=travis-ci
 
 #
 # Docker image.

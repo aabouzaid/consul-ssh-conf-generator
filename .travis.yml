@@ -6,9 +6,9 @@ go:
 jobs:
   include:
 
-    - stage: Run unit test.
+    - stage: Run unit test and coverage report.
       script:
-        - make test
+        - make unittest_coverage
 
     - stage: Build and push docker image.
       if: branch = master
