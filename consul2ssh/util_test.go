@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
+	"os/user"
 	"testing"
 )
 
@@ -30,11 +31,25 @@ func TestGetEnvKey(t *testing.T) {
 }
 
 func TestGetFilePath(t *testing.T) {
-	workingDir, _ := os.Getwd()
-	fileName := "dummy_file.txt"
-	filePath := getFilePath(fileName)
-	expectedFilePath := fmt.Sprintf("%s/%s", workingDir, fileName)
-	assert.Equal(t, expectedFilePath, filePath)
+        var testParameters = []struct {
+                message  string
+                filePath string
+                expected string
+        }{
+                {"Test file with tilde", "~/dummy_file.txt",
+		func() string {user, _ := user.Current(); userHome := user.HomeDir; return userHome}() + "/dummy_file.txt"},
+                {"Test file with tilde", "~",
+		func() string {user, _ := user.Current(); userHome := user.HomeDir; return userHome}()},
+                {"Test file absolute path", "/tmp/dummy_file.txt", "/tmp/dummy_file.txt"},
+                {"Test file relative path", "dummy_file.txt", "dummy_file.txt"},
+                {"Test file relative path with current dir", "./dummy_file.txt", "./dummy_file.txt"},
+        }
+        for _, tp := range testParameters {
+		val := getFilePath(tp.filePath)
+		if val != tp.expected {
+			t.Errorf("%v: got %q, want %q.", tp.message, val, tp.expected)
+		}
+        }
 }
 
 func TestMergeMaps(t *testing.T) {

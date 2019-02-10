@@ -1,9 +1,11 @@
 package consul2ssh
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"os/user"
+	"strings"
 )
 
 func checkErrCMD(err error) {
@@ -21,17 +23,19 @@ func GetEnvKey(key, defaultVal string) string {
 	return defaultVal
 }
 
-func getFilePath(filePath string) string {
-
-	// Get working dir.
-	workingDir, err := os.Getwd()
-	if err != nil {
-		log.Print(err)
-		return ""
-	}
-	fullFilePath := fmt.Sprintf("%s/%s", workingDir, filePath)
-
-	return fullFilePath
+func getFilePath(file string) string {
+        // Expand tilde to home directory or just return the file path.
+        user, _ := user.Current()
+        userHome := user.HomeDir
+        var filePath string
+        if file == "~" {
+                filePath = userHome
+        } else if strings.HasPrefix(file, "~/") {
+                filePath = filepath.Join(userHome, file[2:])
+        } else {
+                filePath = file
+        }
+	return filePath
 }
 
 func mergeMaps(src, dest mapInterface) {
