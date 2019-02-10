@@ -44,14 +44,18 @@ func readConfFile(file string) []byte {
 // GetNodesCMD - get nodes from API in SSH conf format.
 func GetNodesCMD(args []string) {
 
-	//
+	// Read command line args.
 	cmdConf := readCMDArgs(args)
-	var confData s2cConf
+
+	// Read consul2ssh conf file.
 	jsonPayload := readConfFile(cmdConf.confFile)
+
+	// Read consul2ssh URL from cmd arg or conf file.
+	var confData c2sConf
 	confData.get(bytes.NewReader(jsonPayload))
 	c2sNodesURL := setStrVal(cmdConf.url, confData.API.C2SURL) + c2sNodesEndpoint
 
-	//
+	// Read nodes from consul2ssh api.
 	req, err := http.NewRequest("GET", c2sNodesURL, bytes.NewBuffer(jsonPayload))
 	checkErrCMD(err)
 	req.Header.Set("Content-Type", "application/json")
