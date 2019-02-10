@@ -50,34 +50,32 @@ func TestReadConfFile(t *testing.T) {
 func TestGetNodesCMD(t *testing.T) {
 
 	// CMD side.
-	config := []byte(`
-		  {
-		    "api": {
-		    },
-		    "main": {
-		      "prefix": "dv",
-		      "jumphost": "bastion01.fqdn",
-		      "domain": "consul"
-		    },
-		    "global": {
-		      "User": "foo",
-		      "Port": 22
-		    },
-		    "pernode": {
-		      "bastion01": {
-		        "ForwardAgent": "yes"
-		      }
-		    },
-		    "custom": {
-		      "cassandra-local-proxy": {
-		        "TCPKeepAlive": "yes",
-		        "LocalForward": [
-		          "9042 node02:9042"
-		        ]
-		      }
-		    }
-		  }
-	`)
+	config := []byte(`{
+	  "api": {
+	  },
+	  "main": {
+	    "prefix": "dv",
+	    "jumphost": "bastion01.fqdn",
+	    "domain": "consul"
+	  },
+	  "global": {
+	    "User": "foo",
+	    "Port": 22
+	  },
+	  "pernode": {
+	    "bastion01": {
+	      "ForwardAgent": "yes"
+	    }
+	  },
+	  "custom": {
+	    "cassandra-local-proxy": {
+	      "TCPKeepAlive": "yes",
+	      "LocalForward": [
+	        "9042 node02:9042"
+	      ]
+	    }
+	  }
+	}`)
 
 	// TODO: Find a better way rather than creating tmpfile.
 	tmpfile, err := ioutil.TempFile("", "config.json")
@@ -108,6 +106,7 @@ func TestGetNodesCMD(t *testing.T) {
 		GetNodesCMD(args)
 	})
 
+	// Assert.
 	assert.Equal(t, expected, strings.TrimSpace(actual))
 
 }
