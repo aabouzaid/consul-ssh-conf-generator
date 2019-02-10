@@ -14,13 +14,6 @@ const (
 	consulNodesEndpoint = "/v1/catalog/nodes"
 )
 
-var sshConfTemplate = `
-Host {{ .Host }}
-{{- range $item := fmtSSHElems .Main }}
-  {{ $item }}
-{{- end }}
-`
-
 type mapInterface map[string]interface{}
 
 type s2cConf struct {

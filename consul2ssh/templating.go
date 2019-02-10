@@ -14,6 +14,13 @@ type sshNodeConf struct {
 	Main mapInterface
 }
 
+var sshConfTemplate = `
+Host {{ .Host }}
+{{- range $item := fmtSSHElems .Main }}
+  {{ $item }}
+{{- end }}
+`
+
 // fmtSSHElems - format SSH config elements.
 func fmtSSHElems(m mapInterface) []string {
 	output := []string{}
