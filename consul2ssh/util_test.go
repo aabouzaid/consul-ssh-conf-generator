@@ -30,16 +30,20 @@ func TestGetEnvKey(t *testing.T) {
 
 }
 
+func getUserHome() string {
+	user, _ := user.Current()
+	userHome := user.HomeDir
+	return userHome
+}
+
 func TestGetFilePath(t *testing.T) {
         var testParameters = []struct {
                 message  string
                 filePath string
                 expected string
         }{
-                {"Test file with tilde", "~/dummy_file.txt",
-		func() string {user, _ := user.Current(); userHome := user.HomeDir; return userHome}() + "/dummy_file.txt"},
-                {"Test file with tilde", "~",
-		func() string {user, _ := user.Current(); userHome := user.HomeDir; return userHome}()},
+                {"Test file with tilde", "~/dummy_file.txt", getUserHome() + "/dummy_file.txt"},
+                {"Test file with tilde", "~", getUserHome()},
                 {"Test file absolute path", "/tmp/dummy_file.txt", "/tmp/dummy_file.txt"},
                 {"Test file relative path", "dummy_file.txt", "dummy_file.txt"},
                 {"Test file relative path with current dir", "./dummy_file.txt", "./dummy_file.txt"},
