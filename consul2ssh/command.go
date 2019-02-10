@@ -60,5 +60,7 @@ func GetNodesCMD(args []string) {
 	checkErrCMD(err)
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
-	fmt.Print(string(respBody))
+
+	// Print final output to stdout.
+	fmt.Fprint(os.Stdout, string(respBody))
 }
