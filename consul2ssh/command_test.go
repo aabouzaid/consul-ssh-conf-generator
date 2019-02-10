@@ -33,7 +33,7 @@ func TestReadConfFile(t *testing.T) {
 			checkErrCMD(err)
 		}
 		// Read content.
-		fileContent, err := ioutil.ReadFile(tmpfile.Name())
+		fileContent := readConfFile(tmpfile.Name())
 
 		if string(fileContent) != tp.expected {
 			t.Errorf("%v: got %q, want %q.", tp.message, fileContent, tp.expected)
