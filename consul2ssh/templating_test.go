@@ -3,7 +3,9 @@ package consul2ssh
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"net/http/httptest"
 	"reflect"
+	"regexp"
 	"testing"
 )
 
@@ -41,4 +43,34 @@ func TestFmtSSHElems(t *testing.T) {
 			assert.Equal(t, elemKeyValue, output[keyID])
 		}
 	}
+}
+
+func TestBuildTemplate(t *testing.T) {
+	sshConf := sshNodeConf{
+		Host: "foo_host",
+		Main: mapInterface{
+			"Hostname": "foo-fqdn",
+			"User":     "foo_user",
+			"Port":     22,
+		},
+	}
+
+	expected := `
+	  Host foo_host
+	    Hostname foo-fqdn
+	    Port 22
+	    User foo_user
+	`
+
+	// Mock http request (http.ResponseWriter).
+	mockRequest := httptest.NewRecorder()
+	sshConf.buildTemplate(mockRequest, sshConfTemplate)
+	actual := mockRequest.Body.String()
+
+	// Strip all new lines and empty space to make it easy to match.
+	r, _ := regexp.Compile("(\n|\\s)")
+	expectedTrimmed := r.ReplaceAllString(expected, "")
+	actualTrimmed := r.ReplaceAllString(actual, "")
+
+	assert.Equal(t, expectedTrimmed, actualTrimmed)
 }
