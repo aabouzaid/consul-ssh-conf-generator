@@ -4,20 +4,24 @@ go:
   - "1.10.x"
 
 jobs:
+
   include:
 
-    - stage: Run unit test and coverage report.
+    - stage: test
+      name: Unit test and coverage report.
       script:
         - make unittest_coverage
 
-    - stage: Build and push docker image.
+    - stage: build
+      name: Build and push docker image.
       if: branch = master
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         # Build tagged and latest images and push them to Docker Hub.
         - make docker_release
 
-    - stage: Build and push binaries to GitHub.
+    - stage: build
+      name: Build and push binaries to GitHub.
       if: branch = master
       script:
         - make cli_release
