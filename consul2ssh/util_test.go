@@ -37,23 +37,23 @@ func getUserHome() string {
 }
 
 func TestGetFilePath(t *testing.T) {
-        var testParameters = []struct {
-                message  string
-                filePath string
-                expected string
-        }{
-                {"Test file with tilde", "~/dummy_file.txt", getUserHome() + "/dummy_file.txt"},
-                {"Test file with tilde", "~", getUserHome()},
-                {"Test file absolute path", "/tmp/dummy_file.txt", "/tmp/dummy_file.txt"},
-                {"Test file relative path", "dummy_file.txt", "dummy_file.txt"},
-                {"Test file relative path with current dir", "./dummy_file.txt", "./dummy_file.txt"},
-        }
-        for _, tp := range testParameters {
+	var testParameters = []struct {
+		message  string
+		filePath string
+		expected string
+	}{
+		{"Test file with tilde", "~/dummy_file.txt", getUserHome() + "/dummy_file.txt"},
+		{"Test file with tilde", "~", getUserHome()},
+		{"Test file absolute path", "/tmp/dummy_file.txt", "/tmp/dummy_file.txt"},
+		{"Test file relative path", "dummy_file.txt", "dummy_file.txt"},
+		{"Test file relative path with current dir", "./dummy_file.txt", "./dummy_file.txt"},
+	}
+	for _, tp := range testParameters {
 		val := getFilePath(tp.filePath)
 		if val != tp.expected {
 			t.Errorf("%v: got %q, want %q.", tp.message, val, tp.expected)
 		}
-        }
+	}
 }
 
 func TestMergeMaps(t *testing.T) {

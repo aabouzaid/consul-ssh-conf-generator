@@ -3,8 +3,8 @@ package consul2ssh
 import (
 	"log"
 	"os"
-	"path/filepath"
 	"os/user"
+	"path/filepath"
 	"strings"
 )
 
@@ -24,17 +24,17 @@ func GetEnvKey(key, defaultVal string) string {
 }
 
 func getFilePath(file string) string {
-        // Expand tilde to home directory or just return the file path.
-        user, _ := user.Current()
-        userHome := user.HomeDir
-        var filePath string
-        if file == "~" {
-                filePath = userHome
-        } else if strings.HasPrefix(file, "~/") {
-                filePath = filepath.Join(userHome, file[2:])
-        } else {
-                filePath = file
-        }
+	// Expand tilde to home directory or just return the file path.
+	user, _ := user.Current()
+	userHome := user.HomeDir
+	var filePath string
+	if file == "~" {
+		filePath = userHome
+	} else if strings.HasPrefix(file, "~/") {
+		filePath = filepath.Join(userHome, file[2:])
+	} else {
+		filePath = file
+	}
 	return filePath
 }
 
