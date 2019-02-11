@@ -1,6 +1,18 @@
 Change log
 ==========
 
+## v1.3.0
+  - test: add unit test for command, templating, and util
+  - fix: rename wrong abbreviation
+  - refactor: replace print with os.Stdout
+  - refactor: move get file path to util
+  - doc: add more comments
+  - chore: add gofmt for lint
+  - chore: split jobs to stages (test, build)
+  - chore: add coveralls badge
+  - chore: add unittest coverage
+  - chore: add unit test job to travis
+
 ## v1.2.0
   - fix: unexport internal functions and types
   - docs: add comment for exported functions

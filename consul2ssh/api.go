@@ -14,16 +14,9 @@ const (
 	consulNodesEndpoint = "/v1/catalog/nodes"
 )
 
-var sshConfTemplate = `
-Host {{ .Host }}
-{{- range $item := fmtSSHElems .Main }}
-  {{ $item }}
-{{- end }}
-`
-
 type mapInterface map[string]interface{}
 
-type s2cConf struct {
+type c2sConf struct {
 	API     apiConf                 `json:"api"`
 	Main    mainConf                `json:"main"`
 	Global  mapInterface            `json:"global"`
@@ -44,7 +37,7 @@ type mainConf struct {
 	Datacenter string `json:"datacenter"`
 }
 
-func (c *s2cConf) get(reqBody io.Reader) error {
+func (c *c2sConf) get(reqBody io.Reader) error {
 	err := json.NewDecoder(reqBody).Decode(&c)
 	if err != nil {
 		return err
@@ -89,7 +82,7 @@ func (c *consulNodes) getJSON(apiURL string) error {
 func GetNodes(w http.ResponseWriter, r *http.Request) {
 
 	// Read body.
-	var conf s2cConf
+	var conf c2sConf
 	if err := conf.get(r.Body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Misconfigured or no body provided!\n"))

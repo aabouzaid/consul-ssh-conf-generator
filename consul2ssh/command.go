@@ -7,9 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"os/user"
-	"path/filepath"
-	"strings"
 )
 
 const (
@@ -38,17 +35,8 @@ func readCMDArgs(args []string) *cmd {
 }
 
 func readConfFile(file string) []byte {
-	user, _ := user.Current()
-	userHome := user.HomeDir
-
-	// Expand tilde to home directory.
-	if file == "~" {
-		file = userHome
-	} else if strings.HasPrefix(file, "~/") {
-		file = filepath.Join(userHome, file[2:])
-	}
-
-	fileContent, err := ioutil.ReadFile(file)
+	filePath := getFilePath(file)
+	fileContent, err := ioutil.ReadFile(filePath)
 	checkErrCMD(err)
 	return fileContent
 }
@@ -56,14 +44,18 @@ func readConfFile(file string) []byte {
 // GetNodesCMD - get nodes from API in SSH conf format.
 func GetNodesCMD(args []string) {
 
-	//
+	// Read command line args.
 	cmdConf := readCMDArgs(args)
-	var confData s2cConf
+
+	// Read consul2ssh conf file.
 	jsonPayload := readConfFile(cmdConf.confFile)
+
+	// Read consul2ssh URL from cmd arg or conf file.
+	var confData c2sConf
 	confData.get(bytes.NewReader(jsonPayload))
 	c2sNodesURL := setStrVal(cmdConf.url, confData.API.C2SURL) + c2sNodesEndpoint
 
-	//
+	// Read nodes from consul2ssh api.
 	req, err := http.NewRequest("GET", c2sNodesURL, bytes.NewBuffer(jsonPayload))
 	checkErrCMD(err)
 	req.Header.Set("Content-Type", "application/json")
@@ -72,5 +64,7 @@ func GetNodesCMD(args []string) {
 	checkErrCMD(err)
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
-	fmt.Print(string(respBody))
+
+	// Print final output to stdout.
+	fmt.Fprint(os.Stdout, string(respBody))
 }
