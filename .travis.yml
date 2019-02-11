@@ -5,7 +5,15 @@ go:
 
 jobs:
 
+  allow_failures:
+    - stage: lint
+
   include:
+
+    - stage: lint
+      name: Run gofmt.
+      script:
+        - make gofmt
 
     - stage: test
       name: Unit test and coverage report.

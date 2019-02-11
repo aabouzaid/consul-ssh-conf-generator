@@ -6,6 +6,7 @@ DOCKER_USER    := $(or ${DOCKER_USERNAME}, root)
 DOCKER_REPO    := $(DOCKER_USER)/$(APPNAME)
 COVERAGEF_FILE := coverage.out
 
+
 #
 # General.
 deps:
@@ -20,6 +21,12 @@ build:
 
 clean:
 	rm -rfv $(APPNAME)_$(RELEASE)
+
+#
+# Linting.
+gofmt:
+	# Make sure all go files are formatted.
+	[ -z "$(shell gofmt -l .)" ] || exit 1
 
 #
 # Unit test.
