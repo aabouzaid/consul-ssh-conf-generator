@@ -3,6 +3,13 @@ language: go
 go:
   - "1.10.x"
 
+_dev_vars: &dev_vars
+  # Dev jobs like `lint` and `test` will not run on tags and master.
+  if: tag IS blank
+  branches:
+    except:
+      - master
+
 jobs:
 
   allow_failures:
@@ -14,11 +21,13 @@ jobs:
       name: Run gofmt.
       script:
         - make gofmt
+      <<: *dev_vars
 
     - stage: test
       name: Unit test and coverage report.
       script:
         - make unittest_coverage
+      <<: *dev_vars
 
     - stage: build
       name: Build and push docker image.
