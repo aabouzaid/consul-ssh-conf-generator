@@ -13,7 +13,7 @@ _dev_vars: &dev_vars
 jobs:
 
   allow_failures:
-    - stage: lint
+    - name: "Run gofmt."
 
   include:
 
@@ -26,8 +26,8 @@ jobs:
     - stage: lint
       name: Run golint.
       before_script:
-        - sudo apt update
-        - sudo apt install -y golint
+        - go get -v github.com/golang/lint/golint
+        - sudo ln -s ${GOPATH}/bin/golint /usr/local/bin/golint
       script:
         - make golint
       <<: *dev_vars
