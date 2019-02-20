@@ -23,6 +23,15 @@ jobs:
         - make gofmt
       <<: *dev_vars
 
+    - stage: lint
+      name: Run golint.
+      before_script:
+        - sudo apt update
+        - sudo apt install -y golint
+      script:
+        - make golint
+      <<: *dev_vars
+
     - stage: test
       name: Unit test and coverage report.
       script:

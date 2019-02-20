@@ -24,6 +24,10 @@ clean:
 
 #
 # Linting.
+golint:
+	# Make sure all go files are linted.
+	golint -set_exit_status ./...
+
 gofmt:
 	# Make sure all go files are formatted.
 	[ -z "$(shell gofmt -l .)" ] || exit 1
